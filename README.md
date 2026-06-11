@@ -54,7 +54,8 @@ rides so the board isn't empty.
 - Only emails ending in `ALLOWED_EMAIL_DOMAIN` (default `bgcengineering.ca`) can
   sign in — enforced in the Auth.js `signIn` callback.
 - **Production** uses **Microsoft Entra ID** (Azure AD) SSO, which fits BGC's
-  Microsoft 365 environment. Register an app in
+  Microsoft 365 environment. **See [`docs/MICROSOFT_LOGIN.md`](docs/MICROSOFT_LOGIN.md)
+  for a step-by-step setup guide.** In short: register an app in
   [Entra](https://entra.microsoft.com), set the three
   `AUTH_MICROSOFT_ENTRA_ID_*` variables, point the issuer at the BGC tenant, and
   set `ENABLE_DEV_LOGIN="false"`.
