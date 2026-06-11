@@ -1,13 +1,13 @@
 // BGC Carpool — data model
-// Using SQLite for local development. To move to production, switch the
-// datasource provider to "postgresql" and point DATABASE_URL at your DB.
+// PostgreSQL for both local dev and production. Point DATABASE_URL at your
+// database (e.g. a free Neon database). See docs/DEPLOY.md.
 
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
