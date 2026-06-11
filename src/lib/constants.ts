@@ -13,6 +13,39 @@ export type Status = (typeof STATUSES)[number];
 export const WEEKDAYS = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"] as const;
 export type Weekday = (typeof WEEKDAYS)[number];
 
+// BGC offices, grouped by region for the dropdowns.
+export const OFFICE_GROUPS: { region: string; offices: string[] }[] = [
+  {
+    region: "Canada",
+    offices: [
+      "Calgary, AB",
+      "Edmonton, AB",
+      "Fredericton, NB",
+      "Halifax, NS",
+      "Kamloops, BC",
+      "Kelowna, BC",
+      "Kingston, ON",
+      "Montreal, QC",
+      "Ottawa, ON",
+      "Quebec City, QC",
+      "Surrey, BC",
+      "Toronto, ON",
+      "Vancouver, BC",
+      "Victoria, BC",
+    ],
+  },
+  { region: "United States", offices: ["Colorado, US", "Tennessee, US"] },
+  { region: "United Kingdom", offices: ["London, UK"] },
+  { region: "Australia", offices: ["Brisbane, AU"] },
+  {
+    region: "Latin America",
+    offices: ["Santiago, CL", "Santo Domingo, DO"],
+  },
+];
+
+// Flat list of all office values, used for validation and filtering.
+export const OFFICES: string[] = OFFICE_GROUPS.flatMap((g) => g.offices);
+
 export const RIDE_TYPE_LABEL: Record<RideType, string> = {
   OFFER: "Offering a ride",
   REQUEST: "Looking for a ride",

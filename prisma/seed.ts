@@ -36,6 +36,7 @@ async function main() {
       {
         type: "OFFER",
         direction: "TO_WORK",
+        office: "Vancouver, BC",
         area: "North Vancouver — Lonsdale",
         recurring: true,
         daysOfWeek: "MON,TUE,WED,THU,FRI",
@@ -48,6 +49,7 @@ async function main() {
       {
         type: "REQUEST",
         direction: "ROUND_TRIP",
+        office: "Vancouver, BC",
         area: "Burnaby — Metrotown",
         date: tomorrow,
         arrivalTime: "09:00",
@@ -60,6 +62,7 @@ async function main() {
       {
         type: "OFFER",
         direction: "FROM_WORK",
+        office: "Vancouver, BC",
         area: "Downtown → Tri-Cities",
         date: tomorrow,
         departureTime: "16:30",
@@ -70,6 +73,7 @@ async function main() {
       {
         type: "REQUEST",
         direction: "TO_WORK",
+        office: "Surrey, BC",
         area: "Surrey — Guildford",
         recurring: true,
         daysOfWeek: "MON,WED,FRI",

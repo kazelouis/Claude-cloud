@@ -9,6 +9,7 @@ export type RideCardData = {
   id: string;
   type: string;
   direction: string;
+  office: string | null;
   area: string;
   date: Date | null;
   recurring: boolean;
@@ -51,6 +52,11 @@ export function RideCard({ ride }: { ride: RideCardData }) {
       <h3 className="mt-3 text-lg font-semibold text-stone-800 group-hover:text-brand-ink">
         {ride.area}
       </h3>
+      {ride.office && (
+        <p className="mt-1 text-sm font-medium text-brand-ink">
+          📍 {ride.office}
+        </p>
+      )}
 
       <div className="mt-3 flex flex-wrap gap-2">
         {when && <Chip>📅 {when}</Chip>}

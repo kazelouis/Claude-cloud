@@ -61,6 +61,9 @@ export default async function RideDetailPage({
         </div>
 
         <h1 className="mt-4 text-2xl font-bold text-stone-800">{ride.area}</h1>
+        {ride.office && (
+          <p className="mt-1 font-medium text-brand-ink">📍 {ride.office}</p>
+        )}
 
         <div className="mt-4 flex flex-wrap gap-2">
           {when && <Chip>📅 {when}</Chip>}

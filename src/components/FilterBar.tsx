@@ -2,7 +2,7 @@
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useCallback } from "react";
-import { DIRECTION_LABEL, DIRECTIONS } from "@/lib/constants";
+import { DIRECTION_LABEL, DIRECTIONS, OFFICE_GROUPS } from "@/lib/constants";
 
 const TYPE_TABS = [
   { value: "", label: "All rides" },
@@ -28,6 +28,7 @@ export function FilterBar() {
 
   const activeType = params.get("type") ?? "";
   const activeDirection = params.get("direction") ?? "";
+  const activeOffice = params.get("office") ?? "";
   const search = params.get("q") ?? "";
 
   return (
@@ -56,6 +57,22 @@ export function FilterBar() {
           onChange={(e) => setParam("q", e.target.value)}
           className="min-w-[180px] flex-1 rounded-full border border-amber-200 bg-white px-4 py-2 text-sm outline-none focus:border-brand"
         />
+        <select
+          value={activeOffice}
+          onChange={(e) => setParam("office", e.target.value)}
+          className="rounded-full border border-amber-200 bg-white px-4 py-2 text-sm outline-none focus:border-brand"
+        >
+          <option value="">All offices</option>
+          {OFFICE_GROUPS.map((group) => (
+            <optgroup key={group.region} label={group.region}>
+              {group.offices.map((office) => (
+                <option key={office} value={office}>
+                  {office}
+                </option>
+              ))}
+            </optgroup>
+          ))}
+        </select>
         <select
           value={activeDirection}
           onChange={(e) => setParam("direction", e.target.value)}

@@ -2,7 +2,13 @@ import { prisma } from "@/lib/prisma";
 import { requireUser } from "@/lib/session";
 import { FilterBar } from "@/components/FilterBar";
 import { RideCard } from "@/components/RideCard";
-import { RIDE_TYPES, DIRECTIONS, type RideType, type Direction } from "@/lib/constants";
+import {
+  RIDE_TYPES,
+  DIRECTIONS,
+  OFFICES,
+  type RideType,
+  type Direction,
+} from "@/lib/constants";
 import type { Prisma } from "@prisma/client";
 
 export const dynamic = "force-dynamic";
@@ -21,13 +27,16 @@ export default async function BoardPage({
   const direction = DIRECTIONS.includes(sp.direction as Direction)
     ? (sp.direction as Direction)
     : undefined;
+  const office =
+    sp.office && OFFICES.includes(sp.office) ? sp.office : undefined;
   const q = sp.q?.trim();
 
   const where: Prisma.RideWhereInput = {
     status: "OPEN",
     ...(type ? { type } : {}),
     ...(direction ? { direction } : {}),
-    ...(q ? { area: { contains: q } } : {}),
+    ...(office ? { office } : {}),
+    ...(q ? { area: { contains: q, mode: "insensitive" } } : {}),
   };
 
   const rides = await prisma.ride.findMany({

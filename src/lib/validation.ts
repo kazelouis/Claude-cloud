@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { RIDE_TYPES, DIRECTIONS, WEEKDAYS } from "./constants";
+import { RIDE_TYPES, DIRECTIONS, WEEKDAYS, OFFICES } from "./constants";
 
 const timeRegex = /^([01]\d|2[0-3]):[0-5]\d$/;
 
@@ -7,6 +7,10 @@ export const rideSchema = z
   .object({
     type: z.enum(RIDE_TYPES),
     direction: z.enum(DIRECTIONS),
+    office: z
+      .string()
+      .trim()
+      .refine((v) => OFFICES.includes(v), "Please choose a BGC office"),
     area: z.string().trim().min(2, "Please enter an area").max(120),
     recurring: z.boolean().default(false),
     date: z

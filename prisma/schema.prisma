@@ -68,6 +68,7 @@ model Ride {
   id            String     @id @default(cuid())
   type          String // "OFFER" | "REQUEST"
   direction     String // "TO_WORK" | "FROM_WORK" | "ROUND_TRIP"
+  office        String? // BGC office this ride serves, e.g. "Vancouver, BC"
   area          String // pickup / neighbourhood area
   date          DateTime? // specific day, null when recurring
   recurring     Boolean    @default(false)
@@ -86,6 +87,7 @@ model Ride {
 
   @@index([type, status])
   @@index([direction])
+  @@index([office])
 }
 
 // An expression of interest in a Ride from another employee.

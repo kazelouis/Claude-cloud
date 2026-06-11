@@ -16,6 +16,7 @@ function parseForm(formData: FormData) {
   return rideSchema.safeParse({
     type: formData.get("type"),
     direction: formData.get("direction"),
+    office: formData.get("office"),
     area: formData.get("area"),
     recurring: formData.get("recurring") === "on",
     date: formData.get("date") ?? undefined,
@@ -47,6 +48,7 @@ export async function createRide(
     data: {
       type: d.type,
       direction: d.direction,
+      office: d.office,
       area: d.area,
       recurring: d.recurring,
       date: d.recurring || !d.date ? null : new Date(d.date),

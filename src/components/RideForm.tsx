@@ -5,6 +5,7 @@ import { createRide, type RideFormState } from "@/app/actions/rides";
 import {
   DIRECTION_LABEL,
   DIRECTIONS,
+  OFFICE_GROUPS,
   RIDE_TYPE_LABEL,
   WEEKDAYS,
   WEEKDAY_LABEL,
@@ -51,6 +52,27 @@ export function RideForm() {
           </button>
         ))}
       </div>
+
+      <Field
+        label="BGC office"
+        hint="which office this commute is for"
+        error={fe.office}
+      >
+        <select name="office" required defaultValue="" className={inputCls}>
+          <option value="" disabled>
+            Select an office…
+          </option>
+          {OFFICE_GROUPS.map((group) => (
+            <optgroup key={group.region} label={group.region}>
+              {group.offices.map((office) => (
+                <option key={office} value={office}>
+                  {office}
+                </option>
+              ))}
+            </optgroup>
+          ))}
+        </select>
+      </Field>
 
       <Field label="Direction" error={fe.direction}>
         <select name="direction" className={inputCls} defaultValue="TO_WORK">
