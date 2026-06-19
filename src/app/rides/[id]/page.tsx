@@ -17,7 +17,13 @@ import {
   type RideType,
   type Status,
 } from "@/lib/constants";
-import { formatDays, formatRideDate, postedAgo, exactDateTime } from "@/lib/format";
+import {
+  formatDays,
+  formatRideDate,
+  postedAgo,
+  exactDateTime,
+  isPastRide,
+} from "@/lib/format";
 
 export const dynamic = "force-dynamic";
 
@@ -44,6 +50,7 @@ export default async function RideDetailPage({
 
   const isOwner = ride.user.id === user.id;
   const admin = !isOwner && isAdmin(user.email);
+  const past = isPastRide(ride.date, ride.recurring);
   const myResponse = ride.responses.find((r) => r.user.email === user.email);
   const when = ride.recurring
     ? formatDays(ride.daysOfWeek)
@@ -60,6 +67,11 @@ export default async function RideDetailPage({
           <div className="flex items-center gap-2">
             <TypeBadge type={ride.type as RideType} />
             <StatusBadge status={ride.status as Status} />
+            {past && ride.status === "OPEN" && (
+              <span className="inline-flex items-center rounded-full bg-stone-200 px-2.5 py-1 text-xs font-semibold text-stone-600">
+                Past
+              </span>
+            )}
           </div>
           <span className="text-sm font-medium text-stone-400">
             {DIRECTION_LABEL[ride.direction as Direction]}
@@ -172,7 +184,7 @@ export default async function RideDetailPage({
           </div>
         ) : (
           <div className="space-y-6">
-            {ride.status === "OPEN" ? (
+            {ride.status === "OPEN" && !past ? (
               <InterestPanel
                 rideId={ride.id}
                 posterName={ride.user.name}
@@ -184,9 +196,11 @@ export default async function RideDetailPage({
               />
             ) : (
               <p className="rounded-2xl border border-amber-100 bg-card p-4 text-sm text-stone-500 shadow-sm">
-                This ride is{" "}
-                {ride.status === "FULFILLED" ? "matched" : "cancelled"} and no
-                longer accepting responses.
+                {past
+                  ? "This ride's date has passed, so it's no longer accepting responses."
+                  : `This ride is ${
+                      ride.status === "FULFILLED" ? "matched" : "cancelled"
+                    } and no longer accepting responses.`}
               </p>
             )}
             {admin && <AdminDeleteButton rideId={ride.id} />}

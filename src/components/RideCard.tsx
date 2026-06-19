@@ -2,7 +2,13 @@ import Link from "next/link";
 import { Avatar } from "./Avatar";
 import { Chip, StatusBadge, TypeBadge } from "./Badge";
 import { DIRECTION_LABEL, type Direction, type RideType, type Status } from "@/lib/constants";
-import { formatDays, formatRideDate, postedAgo, exactDateTime } from "@/lib/format";
+import {
+  formatDays,
+  formatRideDate,
+  postedAgo,
+  exactDateTime,
+  isPastRide,
+} from "@/lib/format";
 
 // Columns come back from Prisma as plain strings; we narrow at render time.
 export type RideCardData = {
@@ -31,7 +37,8 @@ export function RideCard({ ride }: { ride: RideCardData }) {
   const when = ride.recurring
     ? formatDays(ride.daysOfWeek)
     : formatRideDate(ride.date);
-  const dimmed = status !== "OPEN";
+  const past = isPastRide(ride.date, ride.recurring);
+  const dimmed = status !== "OPEN" || past;
 
   return (
     <Link
@@ -44,6 +51,11 @@ export function RideCard({ ride }: { ride: RideCardData }) {
         <div className="flex items-center gap-2">
           <TypeBadge type={type} />
           {status !== "OPEN" && <StatusBadge status={status} />}
+          {past && status === "OPEN" && (
+            <span className="inline-flex items-center rounded-full bg-stone-200 px-2.5 py-1 text-xs font-semibold text-stone-600">
+              Past
+            </span>
+          )}
         </div>
         <span className="text-xs font-medium text-stone-400">
           {DIRECTION_LABEL[direction]}

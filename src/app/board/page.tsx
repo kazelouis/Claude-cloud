@@ -13,6 +13,7 @@ import {
   type SortKey,
 } from "@/lib/constants";
 import type { Prisma } from "@prisma/client";
+import { startOfTodayUTC } from "@/lib/format";
 
 const ORDER_BY: Record<SortKey, Prisma.RideOrderByWithRelationInput[]> = {
   soonest: [{ date: { sort: "asc", nulls: "last" } }, { createdAt: "desc" }],
@@ -49,6 +50,12 @@ export default async function BoardPage({
 
   const where: Prisma.RideWhereInput = {
     status: "OPEN",
+    // Hide one-off rides whose date has already passed (recurring/undated stay).
+    OR: [
+      { recurring: true },
+      { date: null },
+      { date: { gte: startOfTodayUTC() } },
+    ],
     ...(type ? { type } : {}),
     ...(direction ? { direction } : {}),
     ...(office ? { office } : {}),

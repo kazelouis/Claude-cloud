@@ -11,6 +11,18 @@ export function exactDateTime(date: Date): string {
   return format(date, "PPpp");
 }
 
+/** Start of today in UTC — ride dates are stored at UTC midnight. */
+export function startOfTodayUTC(): Date {
+  const n = new Date();
+  return new Date(Date.UTC(n.getUTCFullYear(), n.getUTCMonth(), n.getUTCDate()));
+}
+
+/** A one-off ride whose date is before today. Recurring rides never expire. */
+export function isPastRide(date: Date | null, recurring: boolean): boolean {
+  if (recurring || !date) return false;
+  return date < startOfTodayUTC();
+}
+
 /** Friendly date label, e.g. "Today", "Tomorrow", or "Mon, Jun 8". */
 export function formatRideDate(date: Date | null): string {
   if (!date) return "";
