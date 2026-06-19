@@ -27,7 +27,7 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col">
         <Navbar />
         <main className="flex-1 w-full">{children}</main>
-        <footer className="border-t border-amber-100 bg-white/60 py-6 text-center text-sm text-stone-500">
+        <footer className="border-t border-amber-100 bg-white/60 px-4 py-6 pb-24 text-center text-sm text-stone-500 sm:pb-6">
           <p>
             BGC Carpool · Participation is voluntary and arranged between
             employees directly.

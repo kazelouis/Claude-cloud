@@ -1,19 +1,23 @@
 import Link from "next/link";
 import { auth, signOut } from "@/auth";
 import { Avatar } from "./Avatar";
+import { MobileNav } from "./MobileNav";
 
 export async function Navbar() {
   const session = await auth();
   const user = session?.user;
 
   return (
-    <header className="sticky top-0 z-20 border-b border-amber-100 bg-white/80 backdrop-blur">
-      <nav className="mx-auto flex max-w-5xl items-center gap-4 px-4 py-3">
+    <>
+      <header className="sticky top-0 z-20 border-b border-amber-100 bg-white/80 backdrop-blur">
+      <nav className="mx-auto flex max-w-5xl items-center gap-2 px-4 py-3 sm:gap-4">
         <Link href="/" className="flex items-center gap-2 font-bold text-brand-ink">
           <span className="text-2xl" aria-hidden>
             🚗
           </span>
-          <span className="text-lg">BGC Carpool</span>
+          <span className="whitespace-nowrap text-base sm:text-lg">
+            BGC Carpool
+          </span>
         </Link>
 
         {user && (
@@ -28,7 +32,7 @@ export async function Navbar() {
             <>
               <Link
                 href="/rides/new"
-                className="rounded-full bg-brand px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-amber-700"
+                className="hidden rounded-full bg-brand px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-amber-700 sm:inline-flex"
               >
                 + Post a ride
               </Link>
@@ -42,7 +46,7 @@ export async function Navbar() {
                 >
                   <button
                     type="submit"
-                    className="text-sm text-stone-500 hover:text-stone-800"
+                    className="whitespace-nowrap text-sm text-stone-500 hover:text-stone-800"
                   >
                     Sign out
                   </button>
@@ -59,7 +63,9 @@ export async function Navbar() {
           )}
         </div>
       </nav>
-    </header>
+      </header>
+      {user && <MobileNav />}
+    </>
   );
 }
 
