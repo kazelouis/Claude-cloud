@@ -6,6 +6,9 @@ import { Avatar } from "@/components/Avatar";
 import { Chip, StatusBadge, TypeBadge } from "@/components/Badge";
 import { InterestPanel } from "@/components/InterestPanel";
 import { OwnerControls } from "@/components/OwnerControls";
+import { TeamsButton } from "@/components/TeamsButton";
+import { CopyButton } from "@/components/CopyButton";
+import { firstNameOf } from "@/lib/teams";
 import {
   DIRECTION_LABEL,
   type Direction,
@@ -141,6 +144,20 @@ export default async function RideDetailPage({
                           “{r.message}”
                         </p>
                       )}
+                      <div className="mt-3 flex flex-wrap items-center gap-2">
+                        <TeamsButton
+                          email={r.user.email}
+                          label="Message on Teams"
+                          message={`Hi ${firstNameOf(
+                            r.user.name,
+                            r.user.email,
+                          )}, thanks for your interest in my BGC Carpool post for ${ride.area} — let's coordinate!`}
+                        />
+                        <CopyButton
+                          value={r.user.name ?? r.user.email}
+                          label="Copy name"
+                        />
+                      </div>
                     </li>
                   ))}
                 </ul>
@@ -150,9 +167,12 @@ export default async function RideDetailPage({
         ) : ride.status === "OPEN" ? (
           <InterestPanel
             rideId={ride.id}
-            alreadyResponded={!!myResponse}
-            existingMessage={myResponse?.message ?? null}
+            posterName={ride.user.name}
+            posterEmail={ride.user.email}
+            area={ride.area}
+            office={ride.office}
             rideType={ride.type as RideType}
+            alreadyResponded={!!myResponse}
           />
         ) : (
           <p className="rounded-2xl border border-amber-100 bg-card p-4 text-sm text-stone-500 shadow-sm">
