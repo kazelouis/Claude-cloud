@@ -19,6 +19,8 @@ model User {
   email         String     @unique
   emailVerified DateTime?
   image         String?
+  homeOffice    String? // default office for the board + new posts
+  homeArea      String? // default pickup area for new posts
   accounts      Account[]
   sessions      Session[]
   rides         Ride[]

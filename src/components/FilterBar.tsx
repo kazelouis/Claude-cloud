@@ -16,7 +16,7 @@ const TYPE_TABS = [
   { value: "REQUEST", label: "🙋 Requests" },
 ];
 
-export function FilterBar() {
+export function FilterBar({ homeOffice = "" }: { homeOffice?: string }) {
   const router = useRouter();
   const pathname = usePathname();
   const params = useSearchParams();
@@ -27,6 +27,7 @@ export function FilterBar() {
       if (value) next.set(key, value);
       else next.delete(key);
       next.delete("posted");
+      next.delete("saved");
       router.replace(`${pathname}?${next.toString()}`, { scroll: false });
     },
     [params, pathname, router],
@@ -34,7 +35,8 @@ export function FilterBar() {
 
   const activeType = params.get("type") ?? "";
   const activeDirection = params.get("direction") ?? "";
-  const activeOffice = params.get("office") ?? "";
+  // No param → show the user's home office (if any), otherwise all.
+  const activeOffice = params.get("office") ?? (homeOffice || "all");
   const activeSort = params.get("sort") ?? DEFAULT_SORT;
   const search = params.get("q") ?? "";
 
@@ -87,7 +89,7 @@ export function FilterBar() {
           onChange={(e) => setParam("office", e.target.value)}
           className="rounded-full border border-amber-200 bg-white px-4 py-2 text-sm outline-none focus:border-brand"
         >
-          <option value="">All offices</option>
+          <option value="all">All offices</option>
           {OFFICE_GROUPS.map((group) => (
             <optgroup key={group.region} label={group.region}>
               {group.offices.map((office) => (

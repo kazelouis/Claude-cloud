@@ -37,7 +37,9 @@ export async function Navbar() {
                 + Post a ride
               </Link>
               <div className="flex items-center gap-2">
-                <Avatar name={user.name} email={user.email} size={32} />
+                <Link href="/profile" title="Your profile" className="rounded-full transition hover:opacity-80">
+                  <Avatar name={user.name} email={user.email} size={32} />
+                </Link>
                 <form
                   action={async () => {
                     "use server";

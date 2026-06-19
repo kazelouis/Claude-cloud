@@ -32,8 +32,15 @@ export default async function BoardPage({
 }: {
   searchParams: Promise<Record<string, string | undefined>>;
 }) {
-  await requireUser();
+  const sessionUser = await requireUser();
   const sp = await searchParams;
+
+  const me = await prisma.user.findUnique({
+    where: { id: sessionUser.id },
+    select: { homeOffice: true },
+  });
+  const homeOffice =
+    me?.homeOffice && OFFICES.includes(me.homeOffice) ? me.homeOffice : "";
 
   const type = RIDE_TYPES.includes(sp.type as RideType)
     ? (sp.type as RideType)
@@ -41,8 +48,13 @@ export default async function BoardPage({
   const direction = DIRECTIONS.includes(sp.direction as Direction)
     ? (sp.direction as Direction)
     : undefined;
+  // Office filter: "all" = no filter; absent = default to the user's office.
   const office =
-    sp.office && OFFICES.includes(sp.office) ? sp.office : undefined;
+    sp.office === "all"
+      ? undefined
+      : sp.office && OFFICES.includes(sp.office)
+        ? sp.office
+        : homeOffice || undefined;
   const q = sp.q?.trim();
   const sort: SortKey = SORT_OPTIONS.some((s) => s.value === sp.sort)
     ? (sp.sort as SortKey)
@@ -83,6 +95,12 @@ export default async function BoardPage({
         </div>
       </div>
 
+      {sp.saved === "1" && (
+        <div className="mt-4 rounded-xl bg-green-50 px-4 py-3 text-sm font-medium text-green-800">
+          ✅ Profile saved. The board now focuses on your office.
+        </div>
+      )}
+
       {sp.posted === "1" && (
         <div className="mt-4 rounded-xl bg-green-50 px-4 py-3 text-sm font-medium text-green-800">
           🎉 Your ride is posted! Coworkers can now reach out.
@@ -90,7 +108,7 @@ export default async function BoardPage({
       )}
 
       <div className="mt-6">
-        <FilterBar />
+        <FilterBar homeOffice={homeOffice} />
       </div>
 
       {rides.length === 0 ? (
