@@ -1,5 +1,15 @@
-import { format, isToday, isTomorrow } from "date-fns";
+import { format, formatDistanceToNow, isToday, isTomorrow } from "date-fns";
 import { WEEKDAY_LABEL, type Weekday } from "./constants";
+
+/** Relative "posted" label, e.g. "about 2 hours ago", "3 days ago". */
+export function postedAgo(date: Date): string {
+  return formatDistanceToNow(date, { addSuffix: true });
+}
+
+/** Full timestamp for tooltips, e.g. "Jun 19, 2026, 2:30 PM". */
+export function exactDateTime(date: Date): string {
+  return format(date, "PPpp");
+}
 
 /** Friendly date label, e.g. "Today", "Tomorrow", or "Mon, Jun 8". */
 export function formatRideDate(date: Date | null): string {

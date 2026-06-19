@@ -15,7 +15,7 @@ import {
   type RideType,
   type Status,
 } from "@/lib/constants";
-import { formatDays, formatRideDate } from "@/lib/format";
+import { formatDays, formatRideDate, postedAgo, exactDateTime } from "@/lib/format";
 
 export const dynamic = "force-dynamic";
 
@@ -95,7 +95,10 @@ export default async function RideDetailPage({
               {ride.user.name ?? ride.user.email.split("@")[0]}
             </p>
             <p className="text-sm text-stone-500">
-              Posted by {isOwner ? "you" : "a coworker"}
+              Posted by {isOwner ? "you" : "a coworker"} ·{" "}
+              <span title={exactDateTime(ride.createdAt)}>
+                {postedAgo(ride.createdAt)}
+              </span>
             </p>
           </div>
         </div>

@@ -2,7 +2,7 @@ import Link from "next/link";
 import { Avatar } from "./Avatar";
 import { Chip, StatusBadge, TypeBadge } from "./Badge";
 import { DIRECTION_LABEL, type Direction, type RideType, type Status } from "@/lib/constants";
-import { formatDays, formatRideDate } from "@/lib/format";
+import { formatDays, formatRideDate, postedAgo, exactDateTime } from "@/lib/format";
 
 // Columns come back from Prisma as plain strings; we narrow at render time.
 export type RideCardData = {
@@ -20,6 +20,7 @@ export type RideCardData = {
   costShare: string | null;
   status: string;
   user: { name: string | null; email: string };
+  createdAt: Date;
   _count?: { responses: number };
 };
 
@@ -73,9 +74,17 @@ export function RideCard({ ride }: { ride: RideCardData }) {
       <div className="mt-4 flex items-center justify-between border-t border-amber-50 pt-3">
         <div className="flex items-center gap-2">
           <Avatar name={ride.user.name} email={ride.user.email} size={28} />
-          <span className="text-sm text-stone-600">
-            {ride.user.name ?? ride.user.email.split("@")[0]}
-          </span>
+          <div className="leading-tight">
+            <span className="block text-sm text-stone-600">
+              {ride.user.name ?? ride.user.email.split("@")[0]}
+            </span>
+            <span
+              className="block text-xs text-stone-400"
+              title={exactDateTime(ride.createdAt)}
+            >
+              Posted {postedAgo(ride.createdAt)}
+            </span>
+          </div>
         </div>
         {ride._count && ride._count.responses > 0 && (
           <span className="text-xs font-medium text-stone-500">
