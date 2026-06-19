@@ -40,20 +40,38 @@ export function FilterBar() {
 
   return (
     <div className="space-y-3">
-      <div className="flex flex-wrap gap-2">
-        {TYPE_TABS.map((tab) => (
-          <button
-            key={tab.value}
-            onClick={() => setParam("type", tab.value)}
-            className={`rounded-full px-4 py-2 text-sm font-semibold transition ${
-              activeType === tab.value
-                ? "bg-brand text-white shadow-sm"
-                : "bg-white text-stone-600 hover:bg-amber-50"
-            }`}
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div className="flex flex-wrap gap-2">
+          {TYPE_TABS.map((tab) => (
+            <button
+              key={tab.value}
+              onClick={() => setParam("type", tab.value)}
+              className={`rounded-full px-4 py-2 text-sm font-semibold transition ${
+                activeType === tab.value
+                  ? "bg-brand text-white shadow-sm"
+                  : "bg-white text-stone-600 hover:bg-amber-50"
+              }`}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
+
+        <div className="flex items-center gap-2 text-sm text-stone-500">
+          <label htmlFor="sort">Sort by</label>
+          <select
+            id="sort"
+            value={activeSort}
+            onChange={(e) => setParam("sort", e.target.value)}
+            className="rounded-full border border-amber-200 bg-white px-3 py-1.5 text-sm font-medium text-stone-700 outline-none focus:border-brand"
           >
-            {tab.label}
-          </button>
-        ))}
+            {SORT_OPTIONS.map((s) => (
+              <option key={s.value} value={s.value}>
+                {s.label}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
 
       <div className="flex flex-wrap items-center gap-2">
@@ -89,22 +107,6 @@ export function FilterBar() {
           {DIRECTIONS.map((d) => (
             <option key={d} value={d}>
               {DIRECTION_LABEL[d]}
-            </option>
-          ))}
-        </select>
-      </div>
-
-      <div className="flex items-center justify-end gap-2 text-sm text-stone-500">
-        <label htmlFor="sort">Sort by</label>
-        <select
-          id="sort"
-          value={activeSort}
-          onChange={(e) => setParam("sort", e.target.value)}
-          className="rounded-full border border-amber-200 bg-white px-3 py-1.5 text-sm font-medium text-stone-700 outline-none focus:border-brand"
-        >
-          {SORT_OPTIONS.map((s) => (
-            <option key={s.value} value={s.value}>
-              {s.label}
             </option>
           ))}
         </select>
