@@ -29,6 +29,26 @@ function parseForm(formData: FormData) {
   });
 }
 
+type RideData = NonNullable<ReturnType<typeof parseForm>["data"]>;
+
+// Map validated form input to the Prisma column values shared by create/update.
+function rideColumns(d: RideData) {
+  return {
+    type: d.type,
+    direction: d.direction,
+    office: d.office,
+    area: d.area,
+    recurring: d.recurring,
+    date: d.recurring || !d.date ? null : new Date(d.date),
+    daysOfWeek: d.recurring ? d.daysOfWeek.join(",") : null,
+    arrivalTime: d.arrivalTime ?? null,
+    departureTime: d.departureTime ?? null,
+    seats: d.seats,
+    costShare: d.costShare ?? null,
+    notes: d.notes ?? null,
+  };
+}
+
 export async function createRide(
   _prev: RideFormState,
   formData: FormData,
@@ -43,28 +63,40 @@ export async function createRide(
     };
   }
 
-  const d = parsed.data;
   await prisma.ride.create({
-    data: {
-      type: d.type,
-      direction: d.direction,
-      office: d.office,
-      area: d.area,
-      recurring: d.recurring,
-      date: d.recurring || !d.date ? null : new Date(d.date),
-      daysOfWeek: d.recurring ? d.daysOfWeek.join(",") : null,
-      arrivalTime: d.arrivalTime ?? null,
-      departureTime: d.departureTime ?? null,
-      seats: d.seats,
-      costShare: d.costShare ?? null,
-      notes: d.notes ?? null,
-      userId: user.id,
-    },
+    data: { ...rideColumns(parsed.data), userId: user.id },
   });
 
   revalidatePath("/board");
   revalidatePath("/my-rides");
   redirect("/board?posted=1");
+}
+
+export async function updateRide(
+  rideId: string,
+  _prev: RideFormState,
+  formData: FormData,
+): Promise<RideFormState> {
+  const user = await requireUser();
+  await ownRideOrThrow(rideId, user.id);
+
+  const parsed = parseForm(formData);
+  if (!parsed.success) {
+    return {
+      error: "Please fix the highlighted fields.",
+      fieldErrors: parsed.error.flatten().fieldErrors,
+    };
+  }
+
+  await prisma.ride.update({
+    where: { id: rideId },
+    data: rideColumns(parsed.data),
+  });
+
+  revalidatePath("/board");
+  revalidatePath("/my-rides");
+  revalidatePath(`/rides/${rideId}`);
+  redirect(`/rides/${rideId}`);
 }
 
 async function ownRideOrThrow(rideId: string, userId: string) {

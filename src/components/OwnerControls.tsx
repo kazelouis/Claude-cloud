@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useTransition } from "react";
 import { deleteRide, setRideStatus } from "@/app/actions/rides";
@@ -30,6 +31,12 @@ export function OwnerControls({
     <div className="rounded-2xl border border-amber-100 bg-card p-4 shadow-sm">
       <p className="font-semibold text-stone-800">Manage your post</p>
       <div className="mt-3 flex flex-wrap gap-2">
+        <Link
+          href={`/rides/${rideId}/edit`}
+          className="rounded-xl bg-amber-100 px-4 py-2 text-sm font-semibold text-brand-ink hover:bg-amber-200"
+        >
+          Edit
+        </Link>
         {status !== "FULFILLED" && (
           <button
             onClick={() => update("FULFILLED")}

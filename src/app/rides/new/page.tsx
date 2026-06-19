@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { requireUser } from "@/lib/session";
 import { RideForm } from "@/components/RideForm";
+import { createRide } from "@/app/actions/rides";
 
 export default async function NewRidePage() {
   await requireUser();
@@ -16,7 +17,7 @@ export default async function NewRidePage() {
         on the board.
       </p>
       <div className="mt-6 rounded-3xl border border-amber-100 bg-card p-6 shadow-sm">
-        <RideForm />
+        <RideForm action={createRide} submitLabel="Post ride" />
       </div>
     </div>
   );

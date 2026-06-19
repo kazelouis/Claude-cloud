@@ -1,7 +1,7 @@
 "use client";
 
 import { useActionState, useState } from "react";
-import { createRide, type RideFormState } from "@/app/actions/rides";
+import type { RideFormState } from "@/app/actions/rides";
 import {
   DIRECTION_LABEL,
   DIRECTIONS,
@@ -14,10 +14,33 @@ import {
 
 const initialState: RideFormState = {};
 
-export function RideForm() {
-  const [state, formAction, pending] = useActionState(createRide, initialState);
-  const [type, setType] = useState<RideType>("OFFER");
-  const [recurring, setRecurring] = useState(false);
+export type RideDefaults = {
+  type?: RideType;
+  direction?: string;
+  office?: string;
+  area?: string;
+  recurring?: boolean;
+  date?: string; // yyyy-MM-dd
+  daysOfWeek?: string[];
+  arrivalTime?: string;
+  departureTime?: string;
+  seats?: number;
+  costShare?: string;
+  notes?: string;
+};
+
+export function RideForm({
+  action,
+  defaults,
+  submitLabel = "Post ride",
+}: {
+  action: (state: RideFormState, formData: FormData) => Promise<RideFormState>;
+  defaults?: RideDefaults;
+  submitLabel?: string;
+}) {
+  const [state, formAction, pending] = useActionState(action, initialState);
+  const [type, setType] = useState<RideType>(defaults?.type ?? "OFFER");
+  const [recurring, setRecurring] = useState(defaults?.recurring ?? false);
 
   const fe = state.fieldErrors ?? {};
   const isOffer = type === "OFFER";
@@ -58,7 +81,12 @@ export function RideForm() {
         hint="which office this commute is for"
         error={fe.office}
       >
-        <select name="office" required defaultValue="" className={inputCls}>
+        <select
+          name="office"
+          required
+          defaultValue={defaults?.office ?? ""}
+          className={inputCls}
+        >
           <option value="" disabled>
             Select an office…
           </option>
@@ -75,7 +103,11 @@ export function RideForm() {
       </Field>
 
       <Field label="Direction" error={fe.direction}>
-        <select name="direction" className={inputCls} defaultValue="TO_WORK">
+        <select
+          name="direction"
+          className={inputCls}
+          defaultValue={defaults?.direction ?? "TO_WORK"}
+        >
           {DIRECTIONS.map((d) => (
             <option key={d} value={d}>
               {DIRECTION_LABEL[d]}
@@ -92,6 +124,7 @@ export function RideForm() {
         <input
           name="area"
           required
+          defaultValue={defaults?.area}
           placeholder="e.g. North Vancouver — Lonsdale"
           className={inputCls}
         />
@@ -123,6 +156,7 @@ export function RideForm() {
                     type="checkbox"
                     name="daysOfWeek"
                     value={d}
+                    defaultChecked={defaults?.daysOfWeek?.includes(d)}
                     className="sr-only"
                   />
                   {WEEKDAY_LABEL[d]}
@@ -136,7 +170,12 @@ export function RideForm() {
         ) : (
           <div className="mt-3">
             <Field label="Date" error={fe.date}>
-              <input type="date" name="date" className={inputCls} />
+              <input
+                type="date"
+                name="date"
+                defaultValue={defaults?.date}
+                className={inputCls}
+              />
             </Field>
           </div>
         )}
@@ -145,10 +184,20 @@ export function RideForm() {
       {/* Times */}
       <div className="grid grid-cols-2 gap-4">
         <Field label="Arrive at office by" hint="optional" error={fe.arrivalTime}>
-          <input type="time" name="arrivalTime" className={inputCls} />
+          <input
+            type="time"
+            name="arrivalTime"
+            defaultValue={defaults?.arrivalTime}
+            className={inputCls}
+          />
         </Field>
         <Field label="Leave office at" hint="optional" error={fe.departureTime}>
-          <input type="time" name="departureTime" className={inputCls} />
+          <input
+            type="time"
+            name="departureTime"
+            defaultValue={defaults?.departureTime}
+            className={inputCls}
+          />
         </Field>
       </div>
 
@@ -161,7 +210,7 @@ export function RideForm() {
           name="seats"
           min={1}
           max={8}
-          defaultValue={1}
+          defaultValue={defaults?.seats ?? 1}
           className={inputCls}
         />
       </Field>
@@ -173,6 +222,7 @@ export function RideForm() {
       >
         <input
           name="costShare"
+          defaultValue={defaults?.costShare}
           placeholder="e.g. Happy to split parking"
           className={inputCls}
         />
@@ -182,6 +232,7 @@ export function RideForm() {
         <textarea
           name="notes"
           rows={3}
+          defaultValue={defaults?.notes}
           placeholder="Anything else helpful — flexibility, route, contact preferences…"
           className={inputCls}
         />
@@ -198,7 +249,7 @@ export function RideForm() {
         disabled={pending}
         className="w-full rounded-xl bg-brand px-4 py-3 font-semibold text-white shadow-sm transition hover:bg-amber-700 disabled:opacity-60"
       >
-        {pending ? "Posting…" : "Post ride"}
+        {pending ? "Saving…" : submitLabel}
       </button>
     </form>
   );
