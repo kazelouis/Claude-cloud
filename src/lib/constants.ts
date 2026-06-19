@@ -46,6 +46,16 @@ export const OFFICE_GROUPS: { region: string; offices: string[] }[] = [
 // Flat list of all office values, used for validation and filtering.
 export const OFFICES: string[] = OFFICE_GROUPS.flatMap((g) => g.offices);
 
+// Board sort options.
+export const SORT_OPTIONS = [
+  { value: "soonest", label: "Soonest date" },
+  { value: "recent", label: "Recently posted" },
+  { value: "office", label: "Office (A–Z)" },
+  { value: "seats", label: "Most seats" },
+] as const;
+export type SortKey = (typeof SORT_OPTIONS)[number]["value"];
+export const DEFAULT_SORT: SortKey = "soonest";
+
 export const RIDE_TYPE_LABEL: Record<RideType, string> = {
   OFFER: "Offering a ride",
   REQUEST: "Looking for a ride",

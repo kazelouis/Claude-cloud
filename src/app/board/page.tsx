@@ -6,10 +6,23 @@ import {
   RIDE_TYPES,
   DIRECTIONS,
   OFFICES,
+  SORT_OPTIONS,
+  DEFAULT_SORT,
   type RideType,
   type Direction,
+  type SortKey,
 } from "@/lib/constants";
 import type { Prisma } from "@prisma/client";
+
+const ORDER_BY: Record<SortKey, Prisma.RideOrderByWithRelationInput[]> = {
+  soonest: [{ date: { sort: "asc", nulls: "last" } }, { createdAt: "desc" }],
+  recent: [{ createdAt: "desc" }],
+  office: [
+    { office: { sort: "asc", nulls: "last" } },
+    { date: { sort: "asc", nulls: "last" } },
+  ],
+  seats: [{ seats: "desc" }, { createdAt: "desc" }],
+};
 
 export const dynamic = "force-dynamic";
 
@@ -30,6 +43,9 @@ export default async function BoardPage({
   const office =
     sp.office && OFFICES.includes(sp.office) ? sp.office : undefined;
   const q = sp.q?.trim();
+  const sort: SortKey = SORT_OPTIONS.some((s) => s.value === sp.sort)
+    ? (sp.sort as SortKey)
+    : DEFAULT_SORT;
 
   const where: Prisma.RideWhereInput = {
     status: "OPEN",
@@ -41,7 +57,7 @@ export default async function BoardPage({
 
   const rides = await prisma.ride.findMany({
     where,
-    orderBy: [{ recurring: "asc" }, { date: "asc" }, { createdAt: "desc" }],
+    orderBy: ORDER_BY[sort],
     include: {
       user: { select: { name: true, email: true } },
       _count: { select: { responses: true } },
