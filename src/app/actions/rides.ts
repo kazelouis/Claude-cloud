@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { requireUser } from "@/lib/session";
 import { rideSchema } from "@/lib/validation";
+import { isAdmin } from "@/lib/admin";
 import type { Status } from "@/lib/constants";
 
 export type RideFormState = {
@@ -118,7 +119,12 @@ export async function setRideStatus(rideId: string, status: Status) {
 
 export async function deleteRide(rideId: string) {
   const user = await requireUser();
-  await ownRideOrThrow(rideId, user.id);
+  const ride = await prisma.ride.findUnique({ where: { id: rideId } });
+  if (!ride) throw new Error("Ride not found.");
+  // Owners can delete their own posts; admins can delete anyone's.
+  if (ride.userId !== user.id && !isAdmin(user.email)) {
+    throw new Error("Not allowed.");
+  }
   await prisma.ride.delete({ where: { id: rideId } });
   revalidatePath("/board");
   revalidatePath("/my-rides");

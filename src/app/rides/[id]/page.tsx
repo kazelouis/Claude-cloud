@@ -8,7 +8,9 @@ import { InterestPanel } from "@/components/InterestPanel";
 import { OwnerControls } from "@/components/OwnerControls";
 import { TeamsButton } from "@/components/TeamsButton";
 import { CopyButton } from "@/components/CopyButton";
+import { AdminDeleteButton } from "@/components/AdminDeleteButton";
 import { firstNameOf } from "@/lib/teams";
+import { isAdmin } from "@/lib/admin";
 import {
   DIRECTION_LABEL,
   type Direction,
@@ -41,6 +43,7 @@ export default async function RideDetailPage({
   if (!ride) notFound();
 
   const isOwner = ride.user.id === user.id;
+  const admin = !isOwner && isAdmin(user.email);
   const myResponse = ride.responses.find((r) => r.user.email === user.email);
   const when = ride.recurring
     ? formatDays(ride.daysOfWeek)
@@ -167,21 +170,27 @@ export default async function RideDetailPage({
               )}
             </div>
           </div>
-        ) : ride.status === "OPEN" ? (
-          <InterestPanel
-            rideId={ride.id}
-            posterName={ride.user.name}
-            posterEmail={ride.user.email}
-            area={ride.area}
-            office={ride.office}
-            rideType={ride.type as RideType}
-            alreadyResponded={!!myResponse}
-          />
         ) : (
-          <p className="rounded-2xl border border-amber-100 bg-card p-4 text-sm text-stone-500 shadow-sm">
-            This ride is {ride.status === "FULFILLED" ? "matched" : "cancelled"}{" "}
-            and no longer accepting responses.
-          </p>
+          <div className="space-y-6">
+            {ride.status === "OPEN" ? (
+              <InterestPanel
+                rideId={ride.id}
+                posterName={ride.user.name}
+                posterEmail={ride.user.email}
+                area={ride.area}
+                office={ride.office}
+                rideType={ride.type as RideType}
+                alreadyResponded={!!myResponse}
+              />
+            ) : (
+              <p className="rounded-2xl border border-amber-100 bg-card p-4 text-sm text-stone-500 shadow-sm">
+                This ride is{" "}
+                {ride.status === "FULFILLED" ? "matched" : "cancelled"} and no
+                longer accepting responses.
+              </p>
+            )}
+            {admin && <AdminDeleteButton rideId={ride.id} />}
+          </div>
         )}
       </div>
     </div>
