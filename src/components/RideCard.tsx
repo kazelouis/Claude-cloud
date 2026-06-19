@@ -36,7 +36,7 @@ export function RideCard({ ride }: { ride: RideCardData }) {
   return (
     <Link
       href={`/rides/${ride.id}`}
-      className={`group block rounded-2xl border border-amber-100 bg-card p-4 shadow-sm transition hover:-translate-y-0.5 hover:border-amber-200 hover:shadow-md ${
+      className={`group flex h-full flex-col rounded-2xl border border-amber-100 bg-card p-4 shadow-sm transition hover:-translate-y-0.5 hover:border-amber-200 hover:shadow-md ${
         dimmed ? "opacity-70" : ""
       }`}
     >
@@ -71,7 +71,7 @@ export function RideCard({ ride }: { ride: RideCardData }) {
         {ride.costShare && <Chip>💸 {ride.costShare}</Chip>}
       </div>
 
-      <div className="mt-4 flex items-center justify-between border-t border-amber-50 pt-3">
+      <div className="mt-auto flex items-center justify-between border-t border-amber-50 pt-3">
         <div className="flex items-center gap-2">
           <Avatar name={ride.user.name} email={ride.user.email} size={28} />
           <div className="leading-tight">
