@@ -3,6 +3,7 @@
 import { useActionState, useState } from "react";
 import type { RideFormState } from "@/app/actions/rides";
 import {
+  COST_SHARE_OPTIONS,
   DIRECTION_LABEL,
   DIRECTIONS,
   OFFICE_GROUPS,
@@ -41,6 +42,13 @@ export function RideForm({
   const [state, formAction, pending] = useActionState(action, initialState);
   const [type, setType] = useState<RideType>(defaults?.type ?? "OFFER");
   const [recurring, setRecurring] = useState(defaults?.recurring ?? false);
+  const [costShare, setCostShare] = useState(defaults?.costShare ?? "");
+
+  // Show any pre-existing custom value (e.g. from older posts) as a pill too.
+  const costShareOptions: string[] =
+    costShare && !COST_SHARE_OPTIONS.includes(costShare as never)
+      ? [costShare, ...COST_SHARE_OPTIONS]
+      : [...COST_SHARE_OPTIONS];
 
   const fe = state.fieldErrors ?? {};
   const isOffer = type === "OFFER";
@@ -217,15 +225,35 @@ export function RideForm({
 
       <Field
         label="Cost-share expectations"
-        hint="optional — e.g. split parking, share gas"
+        hint="optional — pick one"
         error={fe.costShare}
       >
-        <input
-          name="costShare"
-          defaultValue={defaults?.costShare}
-          placeholder="e.g. Happy to split parking"
-          className={inputCls}
-        />
+        <input type="hidden" name="costShare" value={costShare} />
+        <div className="mt-2 flex flex-wrap gap-2">
+          {costShareOptions.map((opt) => {
+            const selected = costShare === opt;
+            return (
+              <button
+                key={opt}
+                type="button"
+                aria-pressed={selected}
+                onClick={() => setCostShare(selected ? "" : opt)}
+                className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-sm font-medium transition ${
+                  selected
+                    ? "border-brand bg-brand text-white"
+                    : "border-amber-200 bg-white text-stone-600 hover:bg-amber-50"
+                }`}
+              >
+                {opt}
+                {selected && (
+                  <span aria-hidden className="text-xs font-bold leading-none">
+                    ✕
+                  </span>
+                )}
+              </button>
+            );
+          })}
+        </div>
       </Field>
 
       <Field label="Notes" hint="optional" error={fe.notes}>

@@ -24,7 +24,7 @@ function parseForm(formData: FormData) {
     arrivalTime: formData.get("arrivalTime") ?? undefined,
     departureTime: formData.get("departureTime") ?? undefined,
     seats: formData.get("seats") ?? 1,
-    costShare: formData.get("costShare") ?? undefined,
+    costShare: formData.get("costShare") || undefined,
     notes: formData.get("notes") ?? undefined,
   });
 }

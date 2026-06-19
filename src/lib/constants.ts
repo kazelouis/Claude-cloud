@@ -56,6 +56,15 @@ export const SORT_OPTIONS = [
 export type SortKey = (typeof SORT_OPTIONS)[number]["value"];
 export const DEFAULT_SORT: SortKey = "soonest";
 
+// Cost-share options offered as single-select pills on the post form.
+export const COST_SHARE_OPTIONS = [
+  "No charge",
+  "Share gas",
+  "Split parking",
+  "Split parking & gas",
+  "Let's discuss",
+] as const;
+
 export const RIDE_TYPE_LABEL: Record<RideType, string> = {
   OFFER: "Offering a ride",
   REQUEST: "Looking for a ride",
