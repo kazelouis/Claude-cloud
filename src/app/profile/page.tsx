@@ -26,8 +26,8 @@ export default async function ProfilePage() {
         </div>
       </div>
       <p className="mt-3 text-sm text-stone-500">
-        Set your office and home area once — the board will focus on your office
-        and new posts will pre-fill, so posting a ride takes seconds.
+        Set your office and home area once, and new posts will pre-fill — so
+        posting a ride takes seconds. The board always shows every office.
       </p>
       <div className="mt-6 rounded-3xl border border-amber-100 bg-card p-6 shadow-sm">
         <ProfileForm

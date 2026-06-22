@@ -32,15 +32,8 @@ export default async function BoardPage({
 }: {
   searchParams: Promise<Record<string, string | undefined>>;
 }) {
-  const sessionUser = await requireUser();
+  await requireUser();
   const sp = await searchParams;
-
-  const me = await prisma.user.findUnique({
-    where: { id: sessionUser.id },
-    select: { homeOffice: true },
-  });
-  const homeOffice =
-    me?.homeOffice && OFFICES.includes(me.homeOffice) ? me.homeOffice : "";
 
   const type = RIDE_TYPES.includes(sp.type as RideType)
     ? (sp.type as RideType)
@@ -48,13 +41,8 @@ export default async function BoardPage({
   const direction = DIRECTIONS.includes(sp.direction as Direction)
     ? (sp.direction as Direction)
     : undefined;
-  // Office filter: "all" = no filter; absent = default to the user's office.
   const office =
-    sp.office === "all"
-      ? undefined
-      : sp.office && OFFICES.includes(sp.office)
-        ? sp.office
-        : homeOffice || undefined;
+    sp.office && OFFICES.includes(sp.office) ? sp.office : undefined;
   const q = sp.q?.trim();
   const sort: SortKey = SORT_OPTIONS.some((s) => s.value === sp.sort)
     ? (sp.sort as SortKey)
@@ -97,7 +85,7 @@ export default async function BoardPage({
 
       {sp.saved === "1" && (
         <div className="mt-4 rounded-xl bg-green-50 px-4 py-3 text-sm font-medium text-green-800">
-          ✅ Profile saved. The board now focuses on your office.
+          ✅ Profile saved. New posts will pre-fill with your office and area.
         </div>
       )}
 
@@ -108,7 +96,7 @@ export default async function BoardPage({
       )}
 
       <div className="mt-6">
-        <FilterBar homeOffice={homeOffice} />
+        <FilterBar />
       </div>
 
       {rides.length === 0 ? (

@@ -16,7 +16,7 @@ const TYPE_TABS = [
   { value: "REQUEST", label: "🙋 Requests" },
 ];
 
-export function FilterBar({ homeOffice = "" }: { homeOffice?: string }) {
+export function FilterBar() {
   const router = useRouter();
   const pathname = usePathname();
   const params = useSearchParams();
@@ -35,8 +35,7 @@ export function FilterBar({ homeOffice = "" }: { homeOffice?: string }) {
 
   const activeType = params.get("type") ?? "";
   const activeDirection = params.get("direction") ?? "";
-  // No param → show the user's home office (if any), otherwise all.
-  const activeOffice = params.get("office") ?? (homeOffice || "all");
+  const activeOffice = params.get("office") ?? "";
   const activeSort = params.get("sort") ?? DEFAULT_SORT;
   const search = params.get("q") ?? "";
 
@@ -89,7 +88,7 @@ export function FilterBar({ homeOffice = "" }: { homeOffice?: string }) {
           onChange={(e) => setParam("office", e.target.value)}
           className="rounded-full border border-amber-200 bg-white px-4 py-2 text-sm outline-none focus:border-brand"
         >
-          <option value="all">All offices</option>
+          <option value="">All offices</option>
           {OFFICE_GROUPS.map((group) => (
             <optgroup key={group.region} label={group.region}>
               {group.offices.map((office) => (

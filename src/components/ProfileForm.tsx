@@ -27,7 +27,7 @@ export function ProfileForm({
         <label className="block text-sm font-medium text-stone-700">
           Your office
           <span className="ml-1 font-normal text-stone-400">
-            (defaults the board and new posts)
+            (pre-fills new posts)
           </span>
         </label>
         <select
@@ -52,15 +52,19 @@ export function ProfileForm({
         <label className="block text-sm font-medium text-stone-700">
           Your home area
           <span className="ml-1 font-normal text-stone-400">
-            (pre-fills new posts)
+            (a city or part of town — pre-fills new posts)
           </span>
         </label>
         <input
           name="homeArea"
           defaultValue={homeArea ?? ""}
-          placeholder="e.g. North Vancouver — Lonsdale"
+          placeholder="e.g. Calgary — Beltline, or North Vancouver"
           className={inputCls}
         />
+        <p className="mt-1 text-xs text-stone-400">
+          Just where you start from — not a route. The board still shows rides
+          for every office.
+        </p>
       </div>
 
       {state.error && (

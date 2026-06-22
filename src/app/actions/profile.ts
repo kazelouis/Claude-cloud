@@ -18,7 +18,15 @@ const profileSchema = z.object({
     .trim()
     .refine((v) => v === "" || OFFICES.includes(v), "Pick a valid office")
     .optional(),
-  homeArea: z.string().trim().max(120).optional(),
+  homeArea: z
+    .string()
+    .trim()
+    .max(120)
+    .refine(
+      (v) => !/(→|->|\sto\s)/i.test(v),
+      "Enter a single city or area, not a route",
+    )
+    .optional(),
 });
 
 export async function updateProfile(
@@ -32,7 +40,10 @@ export async function updateProfile(
   });
 
   if (!parsed.success) {
-    return { error: "Please fix the highlighted fields." };
+    return {
+      error:
+        parsed.error.issues[0]?.message ?? "Please fix the highlighted fields.",
+    };
   }
 
   await prisma.user.update({
