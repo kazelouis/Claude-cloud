@@ -20,6 +20,7 @@ export type RideDefaults = {
   direction?: string;
   office?: string;
   area?: string;
+  destination?: string;
   recurring?: boolean;
   date?: string; // yyyy-MM-dd
   daysOfWeek?: string[];
@@ -125,15 +126,29 @@ export function RideForm({
       </Field>
 
       <Field
-        label="Area / neighbourhood"
-        hint="Where you're starting from (or your general area)"
+        label="Starting location"
+        hint="your neighbourhood — a single place, not a route"
         error={fe.area}
       >
         <input
           name="area"
           required
           defaultValue={defaults?.area}
-          placeholder="e.g. North Vancouver — Lonsdale"
+          placeholder="e.g. North Vancouver"
+          className={inputCls}
+        />
+      </Field>
+
+      <Field
+        label="Destination"
+        hint="where you're heading — a single place"
+        error={fe.destination}
+      >
+        <input
+          name="destination"
+          required
+          defaultValue={defaults?.destination}
+          placeholder="e.g. Downtown office"
           className={inputCls}
         />
       </Field>

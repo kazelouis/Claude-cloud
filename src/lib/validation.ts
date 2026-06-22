@@ -2,6 +2,7 @@ import { z } from "zod";
 import { RIDE_TYPES, DIRECTIONS, WEEKDAYS, OFFICES } from "./constants";
 
 const timeRegex = /^([01]\d|2[0-3]):[0-5]\d$/;
+const notARoute = (v: string) => !/(→|->|\sto\s)/i.test(v);
 
 export const rideSchema = z
   .object({
@@ -11,7 +12,18 @@ export const rideSchema = z
       .string()
       .trim()
       .refine((v) => OFFICES.includes(v), "Please choose a BGC office"),
-    area: z.string().trim().min(2, "Please enter an area").max(120),
+    area: z
+      .string()
+      .trim()
+      .min(2, "Please enter a starting location")
+      .max(120)
+      .refine(notARoute, "Enter a single location, not a route"),
+    destination: z
+      .string()
+      .trim()
+      .min(2, "Please enter a destination")
+      .max(120)
+      .refine(notARoute, "Enter a single location, not a route"),
     recurring: z.boolean().default(false),
     date: z
       .string()

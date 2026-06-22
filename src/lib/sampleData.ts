@@ -9,6 +9,7 @@ export type RideSeed = {
   type: "OFFER" | "REQUEST";
   office: string;
   area: string;
+  destination: string;
   direction: "TO_WORK" | "FROM_WORK" | "ROUND_TRIP";
   recurring?: boolean;
   daysOfWeek?: string;
@@ -26,6 +27,7 @@ export const SAMPLE_RIDES: RideSeed[] = [
     type: "OFFER",
     office: "Calgary, AB",
     area: "Calgary — Beltline",
+    destination: "Calgary — Downtown",
     direction: "TO_WORK",
     recurring: true,
     daysOfWeek: "MON,TUE,WED,THU,FRI",
@@ -39,6 +41,7 @@ export const SAMPLE_RIDES: RideSeed[] = [
     type: "REQUEST",
     office: "Toronto, ON",
     area: "Toronto — The Annex",
+    destination: "Toronto — Financial District",
     direction: "ROUND_TRIP",
     dayOffset: 1,
     arrivalTime: "09:00",
@@ -52,6 +55,7 @@ export const SAMPLE_RIDES: RideSeed[] = [
     type: "OFFER",
     office: "Vancouver, BC",
     area: "Burnaby — Brentwood",
+    destination: "Coquitlam — Town Centre",
     direction: "FROM_WORK",
     dayOffset: 1,
     departureTime: "16:30",
@@ -63,6 +67,7 @@ export const SAMPLE_RIDES: RideSeed[] = [
     type: "REQUEST",
     office: "Edmonton, AB",
     area: "Edmonton — Strathcona (Whyte Ave)",
+    destination: "Edmonton — Downtown",
     direction: "TO_WORK",
     recurring: true,
     daysOfWeek: "MON,WED,FRI",
@@ -75,6 +80,7 @@ export const SAMPLE_RIDES: RideSeed[] = [
     type: "OFFER",
     office: "Ottawa, ON",
     area: "Ottawa — Westboro",
+    destination: "Ottawa — Kanata",
     direction: "ROUND_TRIP",
     dayOffset: 2,
     arrivalTime: "08:45",
@@ -88,6 +94,7 @@ export const SAMPLE_RIDES: RideSeed[] = [
     type: "REQUEST",
     office: "Victoria, BC",
     area: "Victoria — Fernwood",
+    destination: "Victoria — Downtown",
     direction: "TO_WORK",
     dayOffset: 3,
     arrivalTime: "08:15",
@@ -99,6 +106,7 @@ export const SAMPLE_RIDES: RideSeed[] = [
     type: "OFFER",
     office: "London, UK",
     area: "London — Clapham",
+    destination: "London — The City",
     direction: "TO_WORK",
     recurring: true,
     daysOfWeek: "TUE,THU",
@@ -112,6 +120,7 @@ export const SAMPLE_RIDES: RideSeed[] = [
     type: "REQUEST",
     office: "Brisbane, AU",
     area: "Brisbane — Fortitude Valley",
+    destination: "Brisbane — South Bank",
     direction: "FROM_WORK",
     dayOffset: 2,
     departureTime: "17:30",
@@ -166,6 +175,7 @@ export async function seedSampleRides(
       direction: r.direction,
       office: r.office,
       area: r.area,
+      destination: r.destination,
       recurring: Boolean(r.recurring),
       date:
         r.recurring || r.dayOffset === undefined

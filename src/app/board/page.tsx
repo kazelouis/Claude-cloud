@@ -50,16 +50,30 @@ export default async function BoardPage({
 
   const where: Prisma.RideWhereInput = {
     status: "OPEN",
-    // Hide one-off rides whose date has already passed (recurring/undated stay).
-    OR: [
-      { recurring: true },
-      { date: null },
-      { date: { gte: startOfTodayUTC() } },
-    ],
     ...(type ? { type } : {}),
     ...(direction ? { direction } : {}),
     ...(office ? { office } : {}),
-    ...(q ? { area: { contains: q, mode: "insensitive" } } : {}),
+    AND: [
+      // Hide one-off rides whose date has passed (recurring/undated stay).
+      {
+        OR: [
+          { recurring: true },
+          { date: null },
+          { date: { gte: startOfTodayUTC() } },
+        ],
+      },
+      // Search matches starting location or destination.
+      ...(q
+        ? [
+            {
+              OR: [
+                { area: { contains: q, mode: "insensitive" as const } },
+                { destination: { contains: q, mode: "insensitive" as const } },
+              ],
+            },
+          ]
+        : []),
+    ],
   };
 
   const rides = await prisma.ride.findMany({

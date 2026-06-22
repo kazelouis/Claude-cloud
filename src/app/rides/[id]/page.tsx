@@ -78,7 +78,13 @@ export default async function RideDetailPage({
           </span>
         </div>
 
-        <h1 className="mt-4 text-2xl font-bold text-stone-800">{ride.area}</h1>
+        <h1 className="mt-4 text-2xl font-bold text-stone-800">
+          {ride.area}
+          {ride.destination && (
+            <span className="font-normal text-stone-400"> → </span>
+          )}
+          {ride.destination}
+        </h1>
         {ride.office && (
           <p className="mt-1 font-medium text-brand-ink">📍 {ride.office}</p>
         )}

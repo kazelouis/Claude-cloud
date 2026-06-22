@@ -71,7 +71,8 @@ model Ride {
   type          String // "OFFER" | "REQUEST"
   direction     String // "TO_WORK" | "FROM_WORK" | "ROUND_TRIP"
   office        String? // BGC office this ride serves, e.g. "Vancouver, BC"
-  area          String // pickup / neighbourhood area
+  area          String // starting location / neighbourhood
+  destination   String? // destination location
   date          DateTime? // specific day, null when recurring
   recurring     Boolean    @default(false)
   daysOfWeek    String? // CSV for recurring, e.g. "MON,TUE,WED"

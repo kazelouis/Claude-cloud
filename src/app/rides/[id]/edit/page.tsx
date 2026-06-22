@@ -26,6 +26,7 @@ export default async function EditRidePage({
     direction: ride.direction,
     office: ride.office ?? "",
     area: ride.area,
+    destination: ride.destination ?? undefined,
     recurring: ride.recurring,
     date: ride.date ? ride.date.toISOString().slice(0, 10) : undefined,
     daysOfWeek: ride.daysOfWeek ? ride.daysOfWeek.split(",") : [],

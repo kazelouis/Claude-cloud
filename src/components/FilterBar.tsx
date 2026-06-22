@@ -79,7 +79,7 @@ export function FilterBar() {
         <input
           type="search"
           defaultValue={search}
-          placeholder="Search by area…"
+          placeholder="Search location…"
           onChange={(e) => setParam("q", e.target.value)}
           className="min-w-[180px] flex-1 rounded-full border border-amber-200 bg-white px-4 py-2 text-sm outline-none focus:border-brand"
         />
