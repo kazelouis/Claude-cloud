@@ -58,7 +58,7 @@ export function ProfileForm({
         <input
           name="homeArea"
           defaultValue={homeArea ?? ""}
-          placeholder="e.g. Calgary — Beltline, or North Vancouver"
+          placeholder="e.g. North Vancouver"
           className={inputCls}
         />
         <p className="mt-1 text-xs text-stone-400">
